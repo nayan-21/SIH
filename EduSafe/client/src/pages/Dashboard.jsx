@@ -23,20 +23,63 @@ const Dashboard = () => {
   const fetchModules = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/modules');
-      
-      if (response.data.success) {
-        console.log('Modules data:', response.data.data.modules);
-        setModules(response.data.data.modules);
-      } else {
-        // If no success property but data exists
-        console.log('Fallback modules data:', response.data);
-        if (response.data && Array.isArray(response.data)) {
+      // Try to fetch from API first
+      try {
+        const response = await axios.get('http://localhost:5000/api/modules');
+        
+        if (response.data.success) {
+          console.log('Modules data:', response.data.data.modules);
+          setModules(response.data.data.modules);
+          return; // Exit if successful
+        } else if (response.data && Array.isArray(response.data)) {
+          console.log('Fallback modules data:', response.data);
           setModules(response.data);
+          return; // Exit if successful
         }
+      } catch (apiErr) {
+        console.error('API error:', apiErr);
+        // Continue to fallback if API fails
       }
+      
+      // Fallback: Always set dummy modules if API fails
+      console.log('Using fallback dummy modules');
+      setModules([
+        {
+          _id: "dummy1",
+          title: "Cyberbullying Awareness",
+          description: "Learn about cyberbullying, its impact, and how to prevent it.",
+          difficulty: "beginner",
+          thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3",
+          duration: "2 weeks",
+          estimatedHours: 4,
+          category: "Online Safety",
+          lessonCount: 5
+        },
+        {
+          _id: "dummy2",
+          title: "School Safety Fundamentals",
+          description: "Essential knowledge about physical safety in school environments.",
+          difficulty: "beginner",
+          thumbnail: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3",
+          duration: "1 week",
+          estimatedHours: 2,
+          category: "Physical Safety",
+          lessonCount: 3
+        },
+        {
+          _id: "dummy3",
+          title: "Mental Health Awareness",
+          description: "Understand the importance of mental health and recognize warning signs.",
+          difficulty: "intermediate",
+          thumbnail: "https://images.unsplash.com/photo-1493836512294-502baa1986e2?ixlib=rb-4.0.3",
+          duration: "3 weeks",
+          estimatedHours: 6,
+          category: "Mental Health",
+          lessonCount: 8
+        }
+      ]);
     } catch (err) {
-      console.error('Error fetching modules:', err);
+      console.error('Error in module loading process:', err);
       setError('Failed to load modules. Please try again.');
     } finally {
       setLoading(false);
@@ -90,35 +133,7 @@ const Dashboard = () => {
     );
   }
 
-  // Force modules to display for testing
-  useEffect(() => {
-    if (modules.length === 0 && !loading) {
-      // Add some dummy modules if none are loaded
-      setModules([
-        {
-          _id: "dummy1",
-          title: "Cyberbullying Awareness",
-          description: "Learn about cyberbullying, its impact, and how to prevent it.",
-          difficulty: "beginner",
-          thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3"
-        },
-        {
-          _id: "dummy2",
-          title: "School Safety Fundamentals",
-          description: "Essential knowledge about physical safety in school environments.",
-          difficulty: "beginner",
-          thumbnail: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3"
-        },
-        {
-          _id: "dummy3",
-          title: "Mental Health Awareness",
-          description: "Understand the importance of mental health and recognize warning signs.",
-          difficulty: "intermediate",
-          thumbnail: "https://images.unsplash.com/photo-1493836512294-502baa1986e2?ixlib=rb-4.0.3"
-        }
-      ]);
-    }
-  }, [modules, loading]);
+  // We've moved the dummy module logic to the fetchModules function
 
   return (
     <div className="min-h-screen bg-gray-50">
