@@ -220,16 +220,16 @@ quizSchema.methods.getQuestionsByDifficulty = function(difficulty) {
   return this.questions.filter(question => question.difficulty === difficulty);
 };
 
-// Method to randomize questions
-quizSchema.methods.randomizeQuestions = function() {
+// Method to shuffle questions
+quizSchema.methods.shuffleQuestions = function() {
   if (this.randomizeQuestions) {
     this.questions.sort(() => Math.random() - 0.5);
   }
   return this.questions;
 };
 
-// Method to randomize options for all questions
-quizSchema.methods.randomizeOptions = function() {
+// Method to shuffle options for all questions
+quizSchema.methods.shuffleOptions = function() {
   if (this.randomizeOptions) {
     this.questions.forEach(question => {
       question.options.sort(() => Math.random() - 0.5);

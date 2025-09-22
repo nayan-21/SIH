@@ -7,6 +7,9 @@ import Dashboard from './pages/Dashboard';
 import ModuleDetailPage from './pages/ModuleDetailPage';
 import ReportIssuePage from './pages/ReportIssuePage';
 import ReportsDashboard from './pages/ReportsDashboard';
+import LeaderboardPage from './pages/LeaderboardPage';
+import StoriesPage from './pages/StoriesPage';
+import AIChatbot from './pages/AIChatbot';
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
           <Route path="/module/:id" element={<ModuleDetailPage />} />
           <Route path="/report-issue" element={<ReportIssuePage />} />
           <Route path="/reports-dashboard" element={<ReportsDashboard />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/stories" element={<StoriesPage />} />
+          <Route path="/chatbot" element={<AIChatbot />} />
         </Routes>
       </div>
     </Router>

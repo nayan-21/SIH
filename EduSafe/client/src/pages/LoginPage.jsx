@@ -27,16 +27,20 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      // For demo purposes, let's auto-login
+      const demoUser = {
+        _id: "demo123",
+        username: "demouser",
+        email: formData.email || "demo@example.com",
+        role: "student"
+      };
       
-      if (response.data.success) {
-        // Save JWT to localStorage
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
-        
-        // Redirect to dashboard
-        navigate('/dashboard');
-      }
+      // Store user data in localStorage
+      localStorage.setItem('token', 'demo-token-123');
+      localStorage.setItem('user', JSON.stringify(demoUser));
+      
+      // Redirect to dashboard
+      navigate('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
       

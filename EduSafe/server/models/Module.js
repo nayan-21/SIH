@@ -1,5 +1,33 @@
 const mongoose = require('mongoose');
 
+// Quiz question schema
+const quizQuestionSchema = new mongoose.Schema({
+  question: {
+    type: String,
+    required: [true, 'Question text is required'],
+    trim: true
+  },
+  options: {
+    type: [String],
+    required: [true, 'Options are required'],
+    validate: {
+      validator: function(v) {
+        return v.length >= 2; // At least 2 options required
+      },
+      message: 'At least 2 options are required for a quiz question'
+    }
+  },
+  correctAnswer: {
+    type: Number, // Index of the correct option
+    required: [true, 'Correct answer is required'],
+    min: [0, 'Correct answer index must be valid']
+  },
+  explanation: {
+    type: String,
+    trim: true
+  }
+}, { _id: false });
+
 const lessonSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -15,8 +43,8 @@ const lessonSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: {
-      values: ['text', 'video', 'image', 'interactive'],
-      message: 'Lesson type must be text, video, image, or interactive'
+      values: ['text', 'video', 'image', 'interactive', 'quiz'],
+      message: 'Lesson type must be text, video, image, interactive, or quiz'
     },
     default: 'text'
   },

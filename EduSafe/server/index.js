@@ -26,7 +26,11 @@ app.use((req, res, next) => {
 // MongoDB connection
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/edusafe', {
+    // Use the hardcoded connection string from .env file as a fallback
+    const mongoURI = process.env.MONGODB_URI || "mongodb+srv://testuser:Test%401234@cluster0.ts66lut.mongodb.net/test";
+    console.log("Connecting to MongoDB with URI:", mongoURI ? "Valid URI" : "Invalid URI");
+    
+    const conn = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -44,11 +48,15 @@ connectDB();
 const authRoutes = require('./routes/auth');
 const moduleRoutes = require('./routes/modules');
 const reportRoutes = require('./routes/reports');
+const userRoutes = require('./routes/users');
+const storyRoutes = require('./routes/stories');
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/stories', storyRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
@@ -68,8 +76,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
+// 404 handler - using a simple middleware without path pattern
+app.use(function(req, res) {
   res.status(404).json({
     message: 'Route not found',
     status: 'error'
